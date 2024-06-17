@@ -1,0 +1,32 @@
+.login_box_2 {
+  width: 40em;
+  height: 47vh;
+  padding: 100px 0 0;
+}
+.login_box_2 span {
+  color: #fe8533;
+  font-size: 18px;
+}
+.login_box_2 h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+  padding: 5px 0;
+  color: #b63200;
+}
+.login_box_2 p {
+  color: #808080;
+  font-size: 18px;
+  margin-bottom: 20px;
+  line-height: 1.5em;
+}
+.login_box_2 button {
+  background-color: #fe8533;
+  border: none;
+  font-size: 18px;
+  padding: 10px 20px;
+}
+.login_box_2 .nodecore {
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+}
