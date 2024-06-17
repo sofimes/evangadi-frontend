@@ -2,22 +2,7 @@ import React from "react";
 import logo from "../images/headerlogo.png";
 import classes from "../style/header.module.css";
 import { Link } from "react-router-dom";
-// const Header = () => {
-//   return (
-//     <div>
-//       <div className={classes.header}>
-//         <div className={classes.logo_handler}>
-//           <Link to="/">
-//             <img src={logo} alt="evangadi_logo" />
-//           </Link>
-//         </div>
-//         <div className={classes.header1}>
-//           <h3>Home</h3>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+
 const Header = () => {
   function logout() {
     // const token = localStorage.getItem("token")
