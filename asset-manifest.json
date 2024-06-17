@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/evangadi-frontend%20/static/css/main.53f67c53.css",
+    "main.js": "/evangadi-frontend%20/static/js/main.524d7441.js",
+    "index.html": "/evangadi-frontend%20/index.html",
+    "main.53f67c53.css.map": "/evangadi-frontend%20/static/css/main.53f67c53.css.map",
+    "main.524d7441.js.map": "/evangadi-frontend%20/static/js/main.524d7441.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.53f67c53.css",
+    "static/js/main.524d7441.js"
+  ]
+}
