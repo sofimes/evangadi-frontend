@@ -27,7 +27,7 @@ const Header = () => {
     <section className={classes.Header}>
       <div className={classes.Header__container}>
         <div className={classes.logo__container}>
-          <a href="">
+          <a href="/">
             <img src={logo} alt="logo" />
           </a>
         </div>
