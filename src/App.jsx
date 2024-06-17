@@ -27,9 +27,9 @@ function App() {
       navigate("/login");
     }
   }
-  useEffect(() => {
-    checkUser();
-  }, []);
+  // useEffect(() => {
+  //   checkUser();
+  // }, []);
   return (
     <AppState.Provider value={{ user, setUser }}>
       <Routes>
