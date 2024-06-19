@@ -34,7 +34,7 @@ const Login = () => {
   }
   return (
     <>
-      <Header />
+      <Header hideHeader={true} />
       <section className={classes.wrapper}>
         <div className={classes.login_box}>
           <div className={classes.form_description}>

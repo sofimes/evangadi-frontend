@@ -1,50 +1,51 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "../axiosConfig";
 import classes from "../style/answer.module.css";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Header from "./Header";
 import { MdAccountCircle } from "react-icons/md";
+import { AppState } from "../App";
 
 function Answer() {
   const [answer, setAnswer] = useState("");
   const [message, setMessage] = useState("");
   const [answers, setAnswers] = useState([]);
-  const [question, setQuestion] = useState("");
   const [previouslyAnsweredQuestionId, setPreviouslyAnsweredQuestionId] =
     useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
   const token = localStorage.getItem("token");
   const answerDom = useRef();
+  const { user } = useContext(AppState);
+  const [question, setQuestion] = useState("");
 
   const fetchQuestion = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("/questions", {
+      const response = await axios.get("/questions/questionsget", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.status === 200) {
-        setQuestion(response?.data?.data);
-        console.log(response.data.data);
+        setQuestion(response.data[0]);
+        console.log(response.data[0]);
       } else {
         setMessage("Failed to fetch question.");
       }
-      console.log(response.data.data);
     } catch (error) {
       console.error("Error fetching question:", error.message);
       setMessage("An error occurred while fetching question.");
     }
   };
-  // console.log(question);
+
   const fetchAnswers = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("/allAnswers", {
+      const response = await axios.get("/answers/all-answersget", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -52,18 +53,17 @@ function Answer() {
       console.log(response.status, response);
 
       if (response.status === 200) {
-        setAnswers(response?.data?.data);
-        console.log(response?.data?.data);
+        setAnswers(response.data); // Ensure this is an array
+        console.log(response.data);
       } else {
         setMessage("Failed to fetch answers.");
       }
-      console.log(response.data.data);
     } catch (error) {
       console.error("Error fetching answers:", error.message);
       setMessage("An error occurred while fetching answers.");
     }
   };
-  // console.log(answers);
+
   const previouslyAnsweredQuestionInfo = localStorage.getItem("questionInfo");
   useEffect(() => {
     fetchQuestion();
@@ -80,18 +80,18 @@ function Answer() {
 
   const handelPostAnswer = async () => {
     const answerValue = answerDom.current.value;
-    // console.log(answerValue)
     if (!answerValue) {
       setError("Please provide all required fields.");
       return;
     }
     try {
-      //  const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "/answer",
+        `/answers/answerspost/${previouslyAnsweredQuestionId}`,
         {
           answer: answerValue,
+          headers: { Authorization: `Bearer ${token}` },
           questionid: previouslyAnsweredQuestionId,
         },
         {
@@ -100,14 +100,15 @@ function Answer() {
           },
         }
       );
-
+      console.log(response.status);
       if (response.status === 200) {
-        setAnswer(response?.data?.answer);
+        setAnswers([...answers, response.data.answer]); // Append the new answer to the existing answers array
         console.log(response.data);
         setMessage("Answer submitted successfully.");
         setSuccess("Question answered successfully");
+      } else {
+        setMessage("Answer submitted successfully.");
       }
-      setSuccess("Question answered successfully");
       fetchAnswers();
     } catch (error) {
       console.error("Error submitting answer:", error.message);
@@ -124,7 +125,6 @@ function Answer() {
           <div className={classes.questionContent}>
             <div className={classes.questionTitle}>
               <h3>{JSON.parse(previouslyAnsweredQuestionInfo)?.title}</h3>
-
               <h4>{JSON.parse(previouslyAnsweredQuestionInfo)?.description}</h4>
             </div>
             <hr />
@@ -133,60 +133,57 @@ function Answer() {
           <hr />
           <div>
             {message && <p>{message}</p>}
-            {answers.length > 0 ? (
+            {Array.isArray(answers) && answers.length > 0 ? (
               <div>
                 {console.log(
                   "previouslyAnsweredQuestionId",
                   previouslyAnsweredQuestionId
                 )}
-                {answers.map((ans, index) => {
-                  return (
-                    ans.questionid === previouslyAnsweredQuestionId && (
-                      <div
-                        key={index}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          marginBottom: "10px",
-                        }}
-                      >
-                        <div className={classes.answerUser}>
-                          <MdAccountCircle
-                            style={{
-                              marginRight: "10px",
-                              fontSize: "60px",
-                              color: "gray",
-                            }}
-                          />
-                          <b>{ans.user_name}</b>
-                        </div>
 
-                        <div className={classes.answerfromusers}>
-                          <br />
-                          {ans.answer}
-                          {console.log(ans.answer)}
-                          <br />
-                        </div>
+                {answers
+                  .filter(
+                    (ans) => ans.questionid === previouslyAnsweredQuestionId
+                  )
+                  .map((ans, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <div className={classes.answerUser}>
+                        <MdAccountCircle
+                          style={{
+                            marginRight: "10px",
+                            fontSize: "60px",
+                            color: "gray",
+                          }}
+                        />
+                        <b>{ans.username}</b>
                       </div>
-                    )
-                  );
-                })}
+
+                      <div className={classes.answerfromusers}>
+                        <br />
+                        {ans.answer}
+                        <br />
+                      </div>
+                      <hr />
+                    </div>
+                  ))}
               </div>
             ) : (
               <p>No answers yet.</p>
             )}
           </div>
-          {/* <h1>Answer the top Question</h1> */}
-          {/* <div className={classes.backButton}>
-        <Link to="/">Go To Question page</Link>
-      </div> */}
+
           {error && <p style={{ padding: "5px", color: "red" }}>{error}</p>}
           <div className="answer_container">
             <input
               className={classes.first_input}
               ref={answerDom}
               type="textarea"
-              value={answer}
               placeholder="Your answer..."
               onChange={(e) => setAnswer(e.target.value)}
             />
@@ -196,7 +193,7 @@ function Answer() {
               <p style={{ padding: "5px", color: "green" }}>{success}</p>
             )}
             <button onClick={handelPostAnswer}>
-              <Link>Post Your Answer</Link>
+              <Link to="#">Post Your Answer</Link>
             </button>
           </div>
         </section>

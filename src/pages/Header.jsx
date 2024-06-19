@@ -3,7 +3,7 @@ import logo from "../images/headerlogo.png";
 import classes from "../style/header.module.css";
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ hideHeader }) => {
   function logout() {
     // const token = localStorage.getItem("token")
     localStorage.clear();
@@ -28,7 +28,13 @@ const Header = () => {
             </ul>
           </div>
           <Link to="/Login">
-            <button onClick={logout}>Logout</button>
+            <button
+              onClick={logout}
+              className={hideHeader ? classes.hidden : ""}
+            >
+              {" "}
+              Logout
+            </button>
           </Link>
         </div>
       </div>

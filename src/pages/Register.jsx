@@ -46,7 +46,7 @@ const Register = () => {
   }
   return (
     <>
-      <Header />
+      <Header hideHeader={true} />
       <section className={classes.wrapper}>
         <div className={classes.register_box}>
           <div className={classes.form_description}>
@@ -58,6 +58,8 @@ const Register = () => {
           </div>
           <form action="" onSubmit={handleSubmit} className={classes.form}>
             <input type="email" ref={emailDom} placeholder="    Email adress" />
+            <br />
+            <input type="text" ref={userNameDom} placeholder="    username" />
             <br />
             <div className={classes.name}>
               <input
